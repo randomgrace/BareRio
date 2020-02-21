@@ -24,11 +24,6 @@ public class Robot extends TimedRobot
     private Command mAutonomousCommand;
     private RobotContainer mRobotContainer;
 
-    // PDP is used to detect total-current-draw, in 2019 we had spurious
-    // CAN errors.  If this happens in 2020, we can live without it.
-    // See more notes in robotPeriodic below.
-    private PowerDistributionPanel mPDP; 
-
     private static final String kRobotLogVerbosity = "Robot/Verbosity";
 
     @Override
@@ -65,9 +60,6 @@ public class Robot extends TimedRobot
         shed.onCommandFinish((c) -> Logger.info(c.getName() + " finished"));
         shed.onCommandInterrupt((c) -> Logger.info(c.getName() + " interrupted"));
 
-        // if CAN bus spews, delete (see notes at top)
-        this.mPDP = new PowerDistributionPanel(); 
-
         // Instantiate our RobotContainer. This will perform all our button bindings,
         // and put our autonomous chooser on the dashboard.
         mRobotContainer = new RobotContainer();
@@ -98,11 +90,6 @@ public class Robot extends TimedRobot
 
         SmartDashboard.putNumber("Robot/BatteryVoltage", RobotController.getBatteryVoltage());
 
-        // TotalCurrent is delivered by PowerDistributionPanel which has
-        // suffered from CAN bus issues in the past.  Should this persist
-        // Dashboard can rely on LiveWindow but then we don't receive
-        // updates when robot is disabled.
-        SmartDashboard.putNumber("Robot/TotalCurrent", this.mPDP.getTotalCurrent());
     }    
 
     /**
