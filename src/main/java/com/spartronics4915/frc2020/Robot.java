@@ -88,7 +88,7 @@ public class Robot extends TimedRobot
         // scheduler does run as do all LiveWindow functions.
         CommandScheduler.getInstance().run();
 
-        SmartDashboard.putNumber("Robot/BatteryVoltage", RobotController.getBatteryVoltage());
+        //SmartDashboard.putNumber("Robot/BatteryVoltage", RobotController.getBatteryVoltage());
 
     }    
 

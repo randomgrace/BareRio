@@ -3,29 +3,9 @@ package com.spartronics4915.frc2020;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import com.spartronics4915.frc2020.commands.ClimberCommands;
-import com.spartronics4915.frc2020.commands.DriveCommands;
-import com.spartronics4915.frc2020.commands.IndexerCommands;
-import com.spartronics4915.frc2020.commands.IntakeCommands;
-import com.spartronics4915.frc2020.commands.LauncherCommands;
-import com.spartronics4915.frc2020.commands.PanelRotatorCommands;
-import com.spartronics4915.frc2020.commands.SuperstructureCommands;
 import com.spartronics4915.frc2020.commands.LEDCommands;
-import com.spartronics4915.frc2020.subsystems.Climber;
-import com.spartronics4915.frc2020.subsystems.Drive;
-import com.spartronics4915.frc2020.subsystems.Indexer;
-import com.spartronics4915.frc2020.subsystems.Intake;
 import com.spartronics4915.frc2020.subsystems.LED;
 import com.spartronics4915.frc2020.subsystems.LED.BlingState;
-import com.spartronics4915.frc2020.subsystems.Launcher;
-import com.spartronics4915.frc2020.subsystems.PanelRotator;
-import com.spartronics4915.frc2020.subsystems.Vision;
-import com.spartronics4915.lib.hardware.sensors.T265Camera;
-import com.spartronics4915.lib.hardware.sensors.T265Camera.CameraJNIException;
-import com.spartronics4915.lib.math.twodim.control.RamseteTracker;
-import com.spartronics4915.lib.math.twodim.geometry.Pose2d;
-import com.spartronics4915.lib.subsystems.estimator.RobotStateEstimator;
-import com.spartronics4915.lib.util.Kinematics;
 import com.spartronics4915.lib.util.Logger;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -45,89 +25,28 @@ public class RobotContainer
         .getTable("SmartDashboard").getEntry("AutoStrategy");
 
     /* subsystems */
-    private final Climber mClimber;
-    private final Intake mIntake;
-    private final Indexer mIndexer;
-    private final Launcher mLauncher;
-    private final PanelRotator mPanelRotator;
     private final LED mLED;
-    private final Vision mVision;
-    private final Drive mDrive;
-    private final RamseteTracker mRamseteController = new RamseteTracker(2, 0.7);
-    private final RobotStateEstimator mStateEstimator;
-    private final TrajectoryContainer.AutoMode[] mAutoModes;
 
     /* subsystem commands */
     private final LEDCommands mLEDCommands;
-    private final ClimberCommands mClimberCommands;
-    private final DriveCommands mDriveCommands;
-    private final IntakeCommands mIntakeCommands;
-    private final IndexerCommands mIndexerCommands;
-    private final LauncherCommands mLauncherCommands;
-    private final PanelRotatorCommands mPanelRotatorCommands;
-    private final SuperstructureCommands mSuperstructureCommands;
 
-    private final Joystick mJoystick;
-    private final Joystick mButtonBoard;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer()
     {
-        T265Camera slamra;
-        try
-        {
-            slamra = new T265Camera(Constants.Estimator.kSlamraToRobot,
-                Constants.Estimator.kMeasurementCovariance);
-        }
-        catch (CameraJNIException | UnsatisfiedLinkError e)
-        {
-            slamra = null;
-            Logger.exception(e);
-        }
 
-        mDrive = new Drive();
-        mStateEstimator = new RobotStateEstimator(mDrive,
-            new Kinematics(Constants.Drive.kTrackWidthMeters, Constants.Drive.kScrubFactor),
-            slamra);
-        var slamraCommand = new StartEndCommand(() -> mStateEstimator.enable(),
-            () -> mStateEstimator.stop(), mStateEstimator);
-        mStateEstimator.setDefaultCommand(slamraCommand);
-        mStateEstimator.resetRobotStateMaps(new Pose2d());
 
-        mAutoModes = TrajectoryContainer.getAutoModes(mStateEstimator, mDrive, mRamseteController);
-        String autoModeList = Arrays.stream(mAutoModes).map((m) -> m.name)
-            .collect(Collectors.joining(","));
-        SmartDashboard.putString(kAutoOptionsKey, autoModeList);
 
-        mJoystick = new Joystick(Constants.OI.kJoystickId);
-        mButtonBoard = new Joystick(Constants.OI.kButtonBoardId);
 
         /* constructing subsystems */
-        mClimber = new Climber();
-        mIntake = new Intake();
-        mIndexer = new Indexer();
-        mLauncher = new Launcher();
-        mPanelRotator = new PanelRotator();
         mLED = LED.getInstance();
-        mVision = new Vision(mStateEstimator, mLauncher);
 
         /* constructing subsystem commands */
         mLEDCommands = new LEDCommands(mLED);
-        mClimberCommands = new ClimberCommands(mClimber);
-        mDriveCommands = new DriveCommands(mDrive, mJoystick);
-        mIntakeCommands = new IntakeCommands(mIntake);
-        mIndexerCommands = new IndexerCommands(mIndexer);
-        mLauncherCommands = new LauncherCommands(mLauncher, mIndexerCommands,
-            mStateEstimator.getEncoderRobotStateMap());
-        mPanelRotatorCommands = new PanelRotatorCommands(mPanelRotator);
-        mSuperstructureCommands = new SuperstructureCommands(mIndexerCommands,
-            mIntakeCommands, mLauncherCommands);
 
         // mLauncherCommands.new Zero(mLauncher).schedule();
-        configureJoystickBindings();
-        configureButtonBoardBindings();
     }
 
     private void configureJoystickBindings()
