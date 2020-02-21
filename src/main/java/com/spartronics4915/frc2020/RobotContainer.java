@@ -226,12 +226,11 @@ public class RobotContainer
         // new JoystickButton(mButtonBoard, 7).whenPressed(LauncherCommands.new Launch());
 
         /* turning off LEDs for control panel actions to minimize interference */
-        new JoystickButton(mButtonBoard, 5).whenPressed(mPanelRotatorCommands.new Lower();
+        new JoystickButton(mButtonBoard, 5).whenPressed(mPanelRotatorCommands.new Lower()
             .alongWith(mLEDCommands.new SetBlingState(BlingState.BLING_COMMAND_TELEOP)));
-        new JoystickButton(mButtonBoard, 6).whenPressed(mPanelRotatorCommands.new Raise();
+        new JoystickButton(mButtonBoard, 6).whenPressed(mPanelRotatorCommands.new Raise()
             .alongWith(mLEDCommands.new SetBlingState(BlingState.BLING_COMMAND_OFF)));
         new JoystickButton(mButtonBoard, 7).whenPressed(mPanelRotatorCommands.new SpinToColor());
-            
 
         // TODO: interface with the button board "joystick" potentially through GenericHID
         // new JoystickButton(mButtonBoard, 12).whenPressed(mClimberCommands.new ExtendMin());
