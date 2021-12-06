@@ -37,7 +37,10 @@ public class DrivetrainEstimator
         return new MatBuilder<>(Nat.N6(), Nat.N1()).fill(x.get(0, 0), x.get(1, 0), x.get(2, 0),
             x.get(0, 0), x.get(1, 0), x.get(2, 0));
     }
-
+/*
+ * Comment out to get 'bare' Rio working
+ * 
+ 
     public DrivetrainEstimator(Matrix<N3, N1> stateStdDevs, Matrix<N6, N1> measurementStdDevs)
     {
         mObserver = new ExtendedKalmanFilter<N3, N3, N3>(Nat.N3(), Nat.N3(), Nat.N3(), this::f,
@@ -49,6 +52,7 @@ public class DrivetrainEstimator
             stateStdDevs, measurementStdDevs, false, kNominalDt);
     }
 
+ */
     public Pose2d update(Pose2d slamRobotPose, Pose2d visionRobotPose, double dleftMeters,
         double drightMeters, double dthetaRadians)
     {
