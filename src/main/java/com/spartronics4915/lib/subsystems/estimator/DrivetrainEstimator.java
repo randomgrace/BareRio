@@ -16,10 +16,12 @@ public class DrivetrainEstimator
 {
 
     private static final double kNominalDt = 0.01;
-
+/*
+ * Remove for 'bare' Rio
+ * 
     private final ExtendedKalmanFilter<N3, N3, N3> mObserver;
     private final ExtendedKalmanFilter<N3, N3, N6> mVisionObserver;
-
+ */
     private final Matrix<N3, N1> f(Matrix<N3, N1> x, Matrix<N3, N1> u)
     {
         // Diff drive forward kinematics:
